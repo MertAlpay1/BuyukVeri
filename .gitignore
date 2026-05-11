@@ -1,1 +1,21 @@
 venv/
+
+# Delta Lake ve Parquet çıktı dosyaları
+data/bronze/*.parquet
+data/bronze/*.crc
+data/silver/*.parquet
+data/silver/*.crc
+data/silver_features/*.parquet
+data/silver_features/*.crc
+data/gold/*.parquet
+data/gold/*.crc
+data/checkpoints/
+
+# Delta log dosyaları
+data/**/_delta_log/
+
+# .gitkeep dosyalarını koru
+!data/**/.gitkeep
+
+# Jupyter checkpoint dosyaları
+notebooks/.ipynb_checkpoints/
