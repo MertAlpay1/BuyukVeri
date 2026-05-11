@@ -1,13 +1,10 @@
 services:
 
-
-
   kafka:
     image: apache/kafka:latest
     container_name: kafka
     ports:
-      - "9092:9092" 
-
+      - "9092:9092"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -23,55 +20,44 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
-      start_period: 30s         
-
+      start_period: 30s
     networks:
       - net
-
-    
 
   producer:
     build: ./producer
     container_name: producer
     depends_on:
       kafka:
-        condition: service_healthy 
+        condition: service_healthy
     volumes:
       - ./data:/app/data
-
     environment:
       - PYTHONUNBUFFERED=1
-      
     networks:
       - net
 
-
-  spark-master: 
+  spark-master:
     image: apache/spark:3.5.1
     container_name: spark-master
-
     ports:
       - "8080:8080"
       - "7077:7077"
-   
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
-
     networks:
       - net
-      
+
   spark-worker:
     image: apache/spark:3.5.1
     container_name: spark-worker
     depends_on:
       - spark-master
-
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-
     networks:
       - net
 
   jupyter:
-    image: jupyter/pyspark-notebook:spark-3.5.0
+    build: ./jupyter
     container_name: jupyter
     user: root
     ports:
@@ -80,15 +66,16 @@ services:
       - JUPYTER_ENABLE_LAB=yes
       - JUPYTER_TOKEN=admin
     volumes:
-      - ./notebooks:/home/jovyan/work 
+      - ./notebooks:/home/jovyan/work
       - ./data:/home/jovyan/data
+      - ivy-cache:/home/jovyan/.ivy2
     networks:
       - net
 
+volumes:
+  ivy-cache:
+    driver: local
 
-    
 networks:
   net:
     driver: bridge
-
-  
