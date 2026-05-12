@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir \
     matplotlib \
     seaborn \
     numpy \
-    kafka-python
+    kafka-python \
+    mlflow==2.22.0
 
 USER $NB_UID

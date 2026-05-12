@@ -72,6 +72,16 @@ services:
     networks:
       - net
 
+  mlflow:
+    build: ./mlflow
+    container_name: mlflow
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./data/mlruns:/home/mlflow/mlruns
+    networks:
+      - net
+
 volumes:
   ivy-cache:
     driver: local
