@@ -1,0 +1,5 @@
+mlflow==2.22.0
+jaraco-text==4.0.0
+numpy==2.4.4
+pyspark==3.5.1
+scipy==1.17.1

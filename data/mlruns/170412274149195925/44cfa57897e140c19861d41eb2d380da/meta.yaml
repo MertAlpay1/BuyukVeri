@@ -1,0 +1,15 @@
+artifact_uri: /Users/algoraths/Documents/GitHub/BuyukVeri/data/mlruns/170412274149195925/44cfa57897e140c19861d41eb2d380da/artifacts
+end_time: 1778597891515
+entry_point_name: ''
+experiment_id: '170412274149195925'
+lifecycle_stage: active
+run_id: 44cfa57897e140c19861d41eb2d380da
+run_name: DecisionTreeRegressor
+run_uuid: 44cfa57897e140c19861d41eb2d380da
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778597883120
+status: 3
+tags: []
+user_id: algoraths

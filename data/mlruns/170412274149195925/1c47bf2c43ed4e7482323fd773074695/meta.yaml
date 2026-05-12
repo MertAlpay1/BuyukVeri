@@ -1,0 +1,15 @@
+artifact_uri: /Users/algoraths/Documents/GitHub/BuyukVeri/data/mlruns/170412274149195925/1c47bf2c43ed4e7482323fd773074695/artifacts
+end_time: 1778597918992
+entry_point_name: ''
+experiment_id: '170412274149195925'
+lifecycle_stage: active
+run_id: 1c47bf2c43ed4e7482323fd773074695
+run_name: GeneralizedLinearRegression
+run_uuid: 1c47bf2c43ed4e7482323fd773074695
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778597912642
+status: 3
+tags: []
+user_id: algoraths
