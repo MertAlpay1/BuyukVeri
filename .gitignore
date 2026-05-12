@@ -19,3 +19,4 @@ data/**/_delta_log/
 
 # Jupyter checkpoint dosyaları
 notebooks/.ipynb_checkpoints/
+.DS_Store

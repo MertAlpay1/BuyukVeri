@@ -1,0 +1,15 @@
+artifact_uri: /home/mlflow/mlruns/170412274149195925/cb60afb10fd8404fbd945ee59d76c423/artifacts
+end_time: 1778589745702
+entry_point_name: ''
+experiment_id: '170412274149195925'
+lifecycle_stage: active
+run_id: cb60afb10fd8404fbd945ee59d76c423
+run_name: RandomForestRegressor
+run_uuid: cb60afb10fd8404fbd945ee59d76c423
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778589736625
+status: 3
+tags: []
+user_id: root

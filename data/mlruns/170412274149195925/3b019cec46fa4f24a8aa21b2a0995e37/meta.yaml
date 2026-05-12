@@ -1,0 +1,15 @@
+artifact_uri: /home/mlflow/mlruns/170412274149195925/3b019cec46fa4f24a8aa21b2a0995e37/artifacts
+end_time: 1778590634524
+entry_point_name: ''
+experiment_id: '170412274149195925'
+lifecycle_stage: active
+run_id: 3b019cec46fa4f24a8aa21b2a0995e37
+run_name: DecisionTreeRegressor
+run_uuid: 3b019cec46fa4f24a8aa21b2a0995e37
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778590626972
+status: 3
+tags: []
+user_id: root
