@@ -67,22 +67,30 @@ CSV Dosyası
 
 ## Gereksinimler
 
+### Docker ile çalıştırma
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (v4.0+)
 - En az **8 GB RAM** (Docker'a atanmış)
 - En az **15 GB disk alanı**
+
+### Yerel çalıştırma (Docker dışı)
+- Python 3.12
+- Java 17 (`brew install openjdk@17`)
+- `JAVA_HOME` ortam değişkeni ayarlanmış olmalı
 
 ---
 
 ## Kurulum ve Çalıştırma
 
-### 1. Projeyi klonla
+### Docker ile (Önerilen)
+
+#### 1. Projeyi klonla
 
 ```bash
 git clone https://github.com/<kullanici-adi>/BuyukVeri.git
 cd BuyukVeri
 ```
 
-### 2. Docker image'larını build et
+#### 2. Docker image'larını build et
 
 ```bash
 docker compose build
@@ -90,26 +98,49 @@ docker compose build
 
 > İlk build ~5-10 dakika sürer (Jupyter image ~6 GB).
 
-### 3. Tüm servisleri başlat
+#### 3. Tüm servisleri başlat
 
 ```bash
 docker compose up
 ```
 
-### 4. Servislere eriş
+#### 4. Servislere eriş
 
 | Servis | Adres | Bilgi |
 |---|---|---|
 | JupyterLab | http://localhost:8888 | Token: `admin` |
 | Spark Master UI | http://localhost:8080 | — |
-| MLflow UI | http://localhost:5000 | — |
+| MLflow UI | http://localhost:5001 | — |
 | Kafka | `localhost:9092` | — |
 
-### 5. Servisleri durdur
+#### 5. Servisleri durdur
 
 ```bash
 docker compose down
 ```
+
+### Yerel Çalıştırma (Docker dışı)
+
+Notebook'lar Docker olmadan da çalıştırılabilir. Java 17 kurulu ve `JAVA_HOME` ayarlı olması gerekir:
+
+```bash
+# Java kurulumu (macOS)
+brew install openjdk@17
+
+# ~/.zshrc veya ~/.bashrc dosyasına ekle
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# Bağımlılıkları yükle
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt   # veya venv zaten kuruluysa doğrudan çalıştır
+
+# Jupyter başlat
+jupyter lab
+```
+
+> MLflow UI yerel modda `http://localhost:5000` adresinde çalışır.
 
 ---
 
@@ -128,9 +159,13 @@ BuyukVeri/
 ├── jupyter/
 │   └── Dockerfile               # Özel JupyterLab image
 │
+├── mlflow/
+│   └── Dockerfile               # MLflow sunucu image
+│
 ├── notebooks/
 │   ├── 1_Docker_Ortaminin_Kurulumu.ipynb
 │   ├── 3_Spark_Structured_Streaming_ile_Veri_Okuma.ipynb
+│   ├── 3.5_Mimari.ipynb
 │   ├── 4_Kesifsel_Veri_Analizi_EDA.ipynb
 │   ├── 5_Feature_Engineering.ipynb
 │   ├── 6_Makine_Ogrenmesi_MLflow.ipynb
@@ -142,6 +177,8 @@ BuyukVeri/
     ├── silver/                        # Delta Lake — temizlenmiş veri
     ├── silver_features/               # Delta Lake — özellik tablosu
     ├── gold/                          # Delta Lake — agregat/özet veri
+    ├── mlruns/                        # MLflow deney ve model kayıtları
+    ├── figures/                       # Üretilen görsel çıktılar
     └── checkpoints/                   # Spark Streaming kontrol noktaları
 ```
 
@@ -158,6 +195,9 @@ Kafka'dan gelen JSON mesajlarını Spark Structured Streaming ile okur. Şema ta
 - Kafka connector: `spark-sql-kafka-0-10_2.12:3.5.1`
 - Delta Lake: `delta-spark_2.12:3.1.0`
 
+### Notebook 3.5 — Mimari
+Projenin genel veri akışını ve katman mimarisini belgeler.
+
 ### Notebook 4 — Keşifsel Veri Analizi (EDA)
 Bronze Delta tablosu `deltalake` Python kütüphanesiyle okunur.
 
@@ -167,7 +207,7 @@ Bronze Delta tablosu `deltalake` Python kütüphanesiyle okunur.
 - Kategorik ve sayısal değişken dağılımları
 
 ### Notebook 5 — Özellik Mühendisliği (Feature Engineering)
-ML modeline beslenecek 5 anlamlı özellik üretilir ve **Silver** katmanına kaydedilir.
+ML modeline beslenecek anlamlı özellikler üretilir ve **Silver** katmanına kaydedilir.
 
 | Özellik | Açıklama | İş Mantığı |
 |---|---|---|
@@ -187,7 +227,8 @@ ML modeline beslenecek 5 anlamlı özellik üretilir ve **Silver** katmanına ka
 4. Gradient Boosted Trees (GBT) Regressor
 5. Generalized Linear Regression (GLR)
 
-Metrikler: RMSE, MAE, R², Feature Importance, Residual Analizi
+Metrikler: RMSE, MAE, R², Feature Importance, Residual Analizi  
+Sonuçlar ve model artifact'ları MLflow'a loglanır; en iyi modelin tahminleri **Gold** katmanına Delta formatında kaydedilir.
 
 ### Notebook 7 — Dashboard ve Görselleştirme
 Tüm proje sonuçlarını özetleyen görsel dashboard.
@@ -221,7 +262,7 @@ Tüm proje sonuçlarını özetleyen görsel dashboard.
 3. Producer, CSV'yi okuyup saniyede ~100 JSON mesajı Kafka'ya gönderir
 4. Notebook 3 çalıştırılır → Spark, Kafka'dan okur → Bronze Delta'ya yazar
 5. Notebook 4 çalıştırılır → EDA grafikleri üretilir
-6. Notebook 5 çalıştırılır → 5 özellik üretilip Silver Delta'ya kaydedilir
+6. Notebook 5 çalıştırılır → Özellikler üretilip Silver Delta'ya kaydedilir
 7. Notebook 6 çalıştırılır → 5 model eğitilir, MLflow'a loglanır
 8. Notebook 7 çalıştırılır → Dashboard grafikleri oluşturulur
 ```
